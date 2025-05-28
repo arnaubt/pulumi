@@ -15,6 +15,7 @@ import (
 	_ "fmt"
 	"io"
 	"os"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -41,6 +42,12 @@ func ExampleFile() {
 }
 
 func TestMain(m *testing.M) {
+	if runtime.GOOS == "windows" {
+		// Skip tests on Windows as they are not supported.
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		os.Stdout.WriteString("Skipping tests on Windows as they are not supported.\n")
+		os.Exit(0)
+	}
 	// Use a smaller poll duration for faster test runs. Keep it below
 	// 100ms (which value is used as common delays for tests)
 	watch.POLL_DURATION = 5 * time.Millisecond

@@ -17,6 +17,7 @@ package main
 import (
 	"io/fs"
 	"os"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -27,6 +28,11 @@ import (
 // If the parameters in pulumix/gen.go ever change,
 // this test should be updated.
 func TestPulumixIsUpToDate(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		// Skip tests on Windows as they are not supported.
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		t.Skip("Skipping tests on Windows as they are not supported.")
+	}
 	t.Parallel()
 
 	outDir := t.TempDir()

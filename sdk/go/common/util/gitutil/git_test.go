@@ -23,6 +23,7 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -38,6 +39,20 @@ import (
 	ptesting "github.com/pulumi/pulumi/sdk/v3/go/common/testing"
 	"github.com/pulumi/pulumi/sdk/v3/go/common/util/contract"
 )
+
+func TestMain(m *testing.M) {
+	if runtime.GOOS == "windows" {
+		// Skip tests on Windows as they are not supported.
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		os.Stdout.WriteString("Skipping tests on Windows as they are not supported.\n")
+		os.Exit(0)
+	}
+	// Run the tests.
+	code := m.Run()
+
+	// Exit with the code returned by the tests.
+	os.Exit(code)
+}
 
 func TestParseGitRepoURL(t *testing.T) {
 	t.Parallel()

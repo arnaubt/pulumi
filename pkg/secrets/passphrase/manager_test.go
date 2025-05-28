@@ -17,6 +17,7 @@ package passphrase
 import (
 	"encoding/json"
 	"os"
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -27,6 +28,20 @@ const (
 	state       = `{"salt":"v1:fozI5u6B030=:v1:F+6ZduKKd8G0/V7L:PGMFeIzwobWRKmEAzUdaQHqC5mMRIQ=="}`
 	brokenState = `{"salt":"fozI5u6B030=:v1:F+6ZduL:PGMFeIzwobWRKmEAzUdaQHqC5mMRIQ=="}`
 )
+
+func TestMain(m *testing.M) {
+	if runtime.GOOS == "windows" {
+		// Skip tests on Windows as they are not supported.
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		os.Stdout.WriteString("Skipping tests on Windows as they are not supported.\n")
+		os.Exit(0)
+	}
+	// Run the tests.
+	code := m.Run()
+
+	// Exit with the code returned by the tests.
+	os.Exit(code)
+}
 
 func TestPassphraseManagerIncorrectPassphraseReturnsErrorCrypter(t *testing.T) {
 	clearCachedSecretsManagers()

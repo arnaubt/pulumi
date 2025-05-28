@@ -29,6 +29,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
+	"runtime"
 	"testing"
 	"time"
 
@@ -1499,6 +1500,10 @@ func TestBundledPluginSearch(t *testing.T) {
 }
 
 func TestAmbientPluginsWarn(t *testing.T) {
+	if runtime.GOOS == "windows" || runtime.GOOS == "darwin" {
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		t.Skip("Skipping tests on Windows as they are not supported.")
+	}
 	ctx := context.Background()
 	// Create a fake plugin in the path
 	pathDir := t.TempDir()
@@ -1526,6 +1531,10 @@ func TestAmbientPluginsWarn(t *testing.T) {
 }
 
 func TestAmbientBundledPluginsWarn(t *testing.T) {
+	if runtime.GOOS == "windows" || runtime.GOOS == "darwin" {
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		t.Skip("Skipping tests on Windows as they are not supported.")
+	}
 	// Get the path of this executable
 	exe, err := os.Executable()
 	require.NoError(t, err)

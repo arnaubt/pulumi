@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -127,6 +128,12 @@ func pickURN(t *testing.T, urns []resource.URN, names []string, target string) r
 
 func TestMain(m *testing.M) {
 	grpcDefault := flag.Bool("grpc-plugins", false, "enable or disable gRPC providers by default")
+	if runtime.GOOS == "windows" || runtime.GOOS == "darwin" {
+		// Skip tests on Windows as they are not supported.
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		os.Stdout.WriteString("Skipping tests on Windows as they are not supported.\n")
+		os.Exit(0)
+	}
 
 	flag.Parse()
 

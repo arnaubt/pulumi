@@ -71,6 +71,10 @@ func TestValidateVenv(t *testing.T) {
 }
 
 func TestCommand(t *testing.T) {
+	if runtime.GOOS == windows {
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		t.Skip("Skipping tests on Windows as they are not supported.")
+	}
 	// Poetry with `in-project = true` uses `.venv` as the default virtualenv directory.
 	// Use the same for pip to keep the tests consistent.
 	venvDir := ".venv"
@@ -127,6 +131,11 @@ func TestCommand(t *testing.T) {
 }
 
 func TestListPackages(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		t.Skip("Skipping tests on Windows as they are not supported.")
+	}
+
 	t.Parallel()
 
 	// Build the mock package before running the tests, so parallel tests don't
@@ -241,6 +250,10 @@ func TestListPackages(t *testing.T) {
 }
 
 func TestAbout(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		t.Skip("Skipping tests on Windows as they are not supported.")
+	}
 	t.Parallel()
 
 	for _, opts := range []PythonOptions{

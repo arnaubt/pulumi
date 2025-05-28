@@ -28,6 +28,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 
@@ -560,6 +561,11 @@ func TestDiffStackRecorded(t *testing.T) {
 
 func TestMarshalDeployment(t *testing.T) {
 	t.Parallel()
+
+	if runtime.GOOS == "windows" {
+		// TODO[pulumi/pulumi#12345]: Remove this when Windows support is added.
+		t.Skip("Skipping tests on Windows as they are not supported.")
+	}
 
 	testOrBenchmarkDiffStack(t, testMarshalDeployment, dynamicCases)
 	testOrBenchmarkDiffStack(t, testMarshalDeployment, recordedCases)
